@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { TopBar } from '../components/TopBar'
 import { AREA_ICONS, AREAS } from '../lib/areas'
+import { computeRoiByArea, computeTotalRoiHours } from '../lib/roi'
 import { useBrainOpsStore } from '../lib/store'
 import type { ProcessStatus } from '../types'
 
@@ -32,8 +34,8 @@ export function Analytics() {
     processes.reduce((acc, p) => acc + (p.efficiencyScore ?? 0), 0) / Math.max(1, processes.length),
   )
 
-  const roiByArea = useBrainOpsStore((s) => s.roiHoursByArea())
-  const totalRoiHours = useBrainOpsStore((s) => s.totalRoiHours())
+  const roiByArea = useMemo(() => computeRoiByArea(processes), [processes])
+  const totalRoiHours = useMemo(() => computeTotalRoiHours(processes), [processes])
   const maxRoi = Math.max(1, ...AREAS.map((a) => roiByArea[a]))
 
   return (

@@ -1,8 +1,10 @@
 import { ChevronRight, Mic, Sparkles } from 'lucide-react'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ProgressRing } from '../components/ProgressRing'
 import { TopBar } from '../components/TopBar'
 import { AREA_ICONS } from '../lib/areas'
+import { computeRoiByArea, computeTotalRoiHours } from '../lib/roi'
 import { useBrainOpsStore } from '../lib/store'
 import { useVoiceAgent } from '../lib/voiceAgent'
 
@@ -20,11 +22,12 @@ export function Home() {
   const { start } = useVoiceAgent()
   const departments = useBrainOpsStore((s) => s.departments)
   const activityLog = useBrainOpsStore((s) => s.activityLog)
+  const processes = useBrainOpsStore((s) => s.processes)
   const totalSOPs = useBrainOpsStore((s) => s.totalSOPs())
   const coverage = useBrainOpsStore((s) => s.documentationCoveragePercent())
   const debtHours = useBrainOpsStore((s) => s.documentationDebtHours())
-  const roiByArea = useBrainOpsStore((s) => s.roiHoursByArea())
-  const totalRoiHours = useBrainOpsStore((s) => s.totalRoiHours())
+  const roiByArea = useMemo(() => computeRoiByArea(processes), [processes])
+  const totalRoiHours = useMemo(() => computeTotalRoiHours(processes), [processes])
 
   const handleStart = async () => {
     navigate('/agent')
