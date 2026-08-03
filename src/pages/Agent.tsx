@@ -1,4 +1,4 @@
-import { Mic, MicOff, Settings, Square } from 'lucide-react'
+import { ChevronLeft, Mic, MicOff, Settings, Square } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { phaseLabel, VoiceBubble } from '../components/VoiceBubble'
@@ -40,10 +40,24 @@ export function Agent() {
 
   const isActiveSession = phase === 'listening' || phase === 'speaking' || phase === 'connecting'
 
+  const handleBack = () => {
+    if (isActiveSession) stop()
+    navigate('/')
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-mist-100 via-mist-50 to-white pb-32">
       <header className="flex items-center justify-between px-4 py-3">
-        <h1 className="text-xl font-bold text-ink">BrainOps</h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleBack}
+            aria-label="Volver al inicio"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-card hover:text-ink"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <h1 className="text-xl font-bold text-ink">BrainOps</h1>
+        </div>
         <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-card">
           Inteligencia del sistema activa
         </span>
