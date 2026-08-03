@@ -6,30 +6,19 @@ import { TopBar } from '../components/TopBar'
 import type { Area } from '../lib/areas'
 import { AREA_ICONS, AREAS } from '../lib/areas'
 import { useBrainOpsStore } from '../lib/store'
-import type { ProcessStatus } from '../types'
 
 const PAGE_SIZE = 6
-type FilterTab = 'All' | ProcessStatus
 type AreaFilter = 'Todas' | Area
-
-const TAB_LABELS: Record<FilterTab, string> = {
-  All: 'Todos los procesos',
-  Published: 'Publicados',
-  Draft: 'Borradores',
-  'Needs Review': 'Necesitan revisión',
-}
 
 export function Library() {
   const navigate = useNavigate()
   const processes = useBrainOpsStore((s) => s.processes)
   const [query, setQuery] = useState('')
-  const [tab, setTab] = useState<FilterTab>('All')
   const [areaFilter, setAreaFilter] = useState<AreaFilter>('Todas')
   const [page, setPage] = useState(1)
 
   const filtered = useMemo(() => {
     return processes.filter((p) => {
-      const matchesTab = tab === 'All' || p.status === tab
       const matchesArea = areaFilter === 'Todas' || p.area === areaFilter
       const q = query.trim().toLowerCase()
       const matchesQuery =
@@ -37,18 +26,12 @@ export function Library() {
         p.title.toLowerCase().includes(q) ||
         p.tags.some((t) => t.toLowerCase().includes(q)) ||
         p.category.toLowerCase().includes(q)
-      return matchesTab && matchesArea && matchesQuery
+      return matchesArea && matchesQuery
     })
-  }, [processes, tab, areaFilter, query])
+  }, [processes, areaFilter, query])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
-
-  const counts = {
-    All: processes.length,
-    Published: processes.filter((p) => p.status === 'Published').length,
-    Draft: processes.filter((p) => p.status === 'Draft').length,
-  }
 
   return (
     <div className="pb-28">
@@ -79,25 +62,6 @@ export function Library() {
             placeholder="Buscar procesos, etiquetas o autores"
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-brand-blue dark:border-white/10 dark:bg-ink-soft dark:text-white dark:placeholder:text-slate-500"
           />
-        </div>
-
-        <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1 text-sm">
-          {(['All', 'Published', 'Draft'] as FilterTab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => {
-                setTab(t)
-                setPage(1)
-              }}
-              className={`shrink-0 rounded-full px-3.5 py-1.5 font-medium transition-colors ${
-                tab === t
-                  ? 'bg-ink text-white dark:bg-white dark:text-ink'
-                  : 'bg-mist-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
-              }`}
-            >
-              {TAB_LABELS[t]} ({counts[t as keyof typeof counts] ?? 0})
-            </button>
-          ))}
         </div>
 
         <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1 text-sm">
