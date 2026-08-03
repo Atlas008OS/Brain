@@ -1,16 +1,10 @@
-import { Briefcase, ChevronRight, Mic, Sparkles, Users2 } from 'lucide-react'
+import { ChevronRight, Mic, Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { ProgressRing } from '../components/ProgressRing'
 import { TopBar } from '../components/TopBar'
+import { AREA_ICONS } from '../lib/areas'
 import { useBrainOpsStore } from '../lib/store'
 import { useVoiceAgent } from '../lib/voiceAgent'
-import type { DepartmentNode } from '../types'
-
-const DEPT_ICONS: Record<DepartmentNode['icon'], typeof Briefcase> = {
-  sales: Sparkles,
-  core: Briefcase,
-  talent: Users2,
-}
 
 function timeAgo(iso: string) {
   const diff = Date.now() - new Date(iso).getTime()
@@ -29,6 +23,8 @@ export function Home() {
   const totalSOPs = useBrainOpsStore((s) => s.totalSOPs())
   const coverage = useBrainOpsStore((s) => s.documentationCoveragePercent())
   const debtHours = useBrainOpsStore((s) => s.documentationDebtHours())
+  const roiByArea = useBrainOpsStore((s) => s.roiHoursByArea())
+  const totalRoiHours = useBrainOpsStore((s) => s.totalRoiHours())
 
   const handleStart = async () => {
     navigate('/agent')
@@ -90,15 +86,16 @@ export function Home() {
 
       <section className="px-4 pt-6">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-ink dark:text-white">Nodos departamentales</h3>
+          <h3 className="text-lg font-bold text-ink dark:text-white">Áreas que generan ROI</h3>
           <button onClick={() => navigate('/library')} className="flex items-center text-xs font-medium text-slate-500 dark:text-slate-400">
             Ver catálogo <ChevronRight size={14} />
           </button>
         </div>
-        <p className="mb-3 text-xs text-slate-400">Estado de documentación activa por unidad de negocio.</p>
+        <p className="mb-3 text-xs text-slate-400">Ventas, Marketing, Operaciones y Finanzas — documentación e impacto por área.</p>
         <div className="space-y-3">
           {departments.map((dept) => {
-            const Icon = DEPT_ICONS[dept.icon]
+            const Icon = AREA_ICONS[dept.icon]
+            const liveRoi = roiByArea[dept.icon]
             return (
               <div key={dept.id} className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
                 <div className="flex items-start gap-3">
@@ -106,7 +103,17 @@ export function Home() {
                     <Icon size={18} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-ink dark:text-white">{dept.name}</p>
+                    <div className="flex items-center justify-between">
+                      <p className="font-semibold text-ink dark:text-white">{dept.name}</p>
+                      <span className="text-right">
+                        <span className="block text-sm font-bold text-brand-teal">
+                          {liveRoi > 0 ? `${liveRoi}h` : dept.roiValue}
+                        </span>
+                        <span className="block text-[10px] text-slate-400">
+                          {liveRoi > 0 ? 'horas ahorradas / semana' : dept.roiMetric}
+                        </span>
+                      </span>
+                    </div>
                     <p className="text-xs text-slate-400">{dept.description}</p>
                     <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                       <span>Completitud</span>
@@ -145,16 +152,17 @@ export function Home() {
       <section className="px-4 pt-6">
         <div className="rounded-3xl bg-gradient-to-br from-brand-navy to-ink p-5 text-white shadow-card">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-brand-teal">Insight</p>
-          <h4 className="mt-1 text-lg font-bold">Visualización de carga cognitiva</h4>
+          <h4 className="mt-1 text-lg font-bold">ROI acumulado por documentación</h4>
           <p className="mt-1 text-sm text-slate-300">
-            El cerebro operativo está indexando actualmente {totalSOPs * 120 + 3980} puntos de datos únicos de tu
-            documentación de RR. HH.
+            {totalRoiHours > 0
+              ? `Tus ${totalSOPs} procesos documentados están ahorrando ${totalRoiHours}h/semana en tu operación (~${totalRoiHours * 4}h/mes) entre Ventas, Marketing, Operaciones y Finanzas.`
+              : 'Aún no has registrado el impacto estimado de tus procesos. Añade horas ahorradas por semana en cada proceso para ver tu ROI acumulado aquí.'}
           </p>
           <button
             onClick={() => navigate('/analytics')}
             className="mt-4 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-ink"
           >
-            Explorar mapa
+            Ver detalle de ROI
           </button>
         </div>
       </section>

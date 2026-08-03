@@ -3,11 +3,14 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ProcessCard } from '../components/ProcessCard'
 import { TopBar } from '../components/TopBar'
+import type { Area } from '../lib/areas'
+import { AREA_ICONS, AREAS } from '../lib/areas'
 import { useBrainOpsStore } from '../lib/store'
 import type { ProcessStatus } from '../types'
 
 const PAGE_SIZE = 6
 type FilterTab = 'All' | ProcessStatus
+type AreaFilter = 'Todas' | Area
 
 const TAB_LABELS: Record<FilterTab, string> = {
   All: 'Todos los procesos',
@@ -21,20 +24,22 @@ export function Library() {
   const processes = useBrainOpsStore((s) => s.processes)
   const [query, setQuery] = useState('')
   const [tab, setTab] = useState<FilterTab>('All')
+  const [areaFilter, setAreaFilter] = useState<AreaFilter>('Todas')
   const [page, setPage] = useState(1)
 
   const filtered = useMemo(() => {
     return processes.filter((p) => {
       const matchesTab = tab === 'All' || p.status === tab
+      const matchesArea = areaFilter === 'Todas' || p.area === areaFilter
       const q = query.trim().toLowerCase()
       const matchesQuery =
         q.length === 0 ||
         p.title.toLowerCase().includes(q) ||
         p.tags.some((t) => t.toLowerCase().includes(q)) ||
         p.category.toLowerCase().includes(q)
-      return matchesTab && matchesQuery
+      return matchesTab && matchesArea && matchesQuery
     })
-  }, [processes, tab, query])
+  }, [processes, tab, areaFilter, query])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -93,6 +98,28 @@ export function Library() {
               {TAB_LABELS[t]} ({counts[t as keyof typeof counts] ?? 0})
             </button>
           ))}
+        </div>
+
+        <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1 text-sm">
+          {(['Todas', ...AREAS] as AreaFilter[]).map((a) => {
+            const Icon = a !== 'Todas' ? AREA_ICONS[a] : null
+            return (
+              <button
+                key={a}
+                onClick={() => {
+                  setAreaFilter(a)
+                  setPage(1)
+                }}
+                className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-medium transition-colors ${
+                  areaFilter === a
+                    ? 'bg-brand-blue text-white'
+                    : 'bg-mist-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
+                }`}
+              >
+                {Icon && <Icon size={13} />} {a}
+              </button>
+            )
+          })}
         </div>
 
         <div className="space-y-4">

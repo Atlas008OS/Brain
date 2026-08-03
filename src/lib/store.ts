@@ -1,8 +1,10 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { ActivityEntry, DepartmentNode, ProcessRecord, TranscriptLine } from '../types'
+import type { Area } from './areas'
+import { AREAS } from './areas'
 import { seedActivity, seedDepartments, seedProcesses } from './seed'
 import { buildProcessFromTranscript } from './transcriptToProcess'
+import type { ActivityEntry, DepartmentNode, ProcessRecord, TranscriptLine } from '../types'
 
 interface BrainOpsState {
   processes: ProcessRecord[]
@@ -19,6 +21,8 @@ interface BrainOpsState {
   totalSOPs: () => number
   documentationCoveragePercent: () => number
   documentationDebtHours: () => number
+  roiHoursByArea: () => Record<Area, number>
+  totalRoiHours: () => number
 }
 
 export const useBrainOpsStore = create<BrainOpsState>()(
@@ -102,7 +106,33 @@ export const useBrainOpsStore = create<BrainOpsState>()(
         const drafts = get().processes.filter((p) => p.status !== 'Published')
         return drafts.reduce((acc, p) => acc + Math.max(1, p.steps.filter((s) => !s.done).length * 2), 0)
       },
+
+      roiHoursByArea: () => {
+        const totals = { Ventas: 0, Marketing: 0, Operaciones: 0, Finanzas: 0 } as Record<Area, number>
+        for (const p of get().processes) {
+          if (p.area && p.impactHoursPerWeek) {
+            totals[p.area] += p.impactHoursPerWeek
+          }
+        }
+        return totals
+      },
+
+      totalRoiHours: () => {
+        const totals = get().roiHoursByArea()
+        return AREAS.reduce((acc, area) => acc + totals[area], 0)
+      },
     }),
-    { name: 'brainops-storage', version: 1 },
+    {
+      name: 'brainops-storage',
+      version: 2,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<BrainOpsState> | undefined
+        const hasNewShape = state?.departments?.every((d) => 'roiMetric' in d) ?? false
+        if (!hasNewShape) {
+          return { processes: seedProcesses, departments: seedDepartments, activityLog: seedActivity }
+        }
+        return state
+      },
+    },
   ),
 )

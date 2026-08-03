@@ -1,3 +1,5 @@
+import type { Area } from './lib/areas'
+
 export type ProcessStatus = 'Published' | 'Draft' | 'Needs Review'
 export type Complexity = 'Low' | 'Medium' | 'High'
 
@@ -22,6 +24,9 @@ export interface ProcessRecord {
   summary: string
   status: ProcessStatus
   category: string
+  area?: Area
+  impactHoursPerWeek?: number
+  impactNote?: string
   tags: string[]
   owner?: string
   createdAt: string
@@ -51,8 +56,10 @@ export interface ActivityEntry {
 
 export interface DepartmentNode {
   id: string
-  name: string
+  name: Area
   description: string
-  icon: 'sales' | 'core' | 'talent'
+  icon: Area
   completeness: number
+  roiMetric: string
+  roiValue: string
 }

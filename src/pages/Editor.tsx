@@ -1,7 +1,8 @@
-import { BrainCog, Image as ImageIcon, Plus, Save, Trash2, UserPlus } from 'lucide-react'
+import { BrainCog, Image as ImageIcon, Plus, Save, Trash2, TrendingUp, UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { TopBar } from '../components/TopBar'
+import { AREAS, AREA_ICONS } from '../lib/areas'
 import { useBrainOpsStore } from '../lib/store'
 
 const STATUS_LABELS = {
@@ -73,6 +74,59 @@ export function Editor() {
               {STATUS_LABELS[status]}
             </button>
           ))}
+        </div>
+
+        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Área</p>
+        <div className="mt-1.5 flex flex-wrap gap-1.5">
+          {AREAS.map((area) => {
+            const Icon = AREA_ICONS[area]
+            return (
+              <button
+                key={area}
+                onClick={() => updateProcess(process.id, { area, category: area })}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  process.area === area
+                    ? 'bg-brand-blue text-white'
+                    : 'bg-mist-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
+                }`}
+              >
+                <Icon size={13} /> {area}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink dark:text-white">
+            <TrendingUp size={15} className="text-brand-teal" /> Impacto en ROI
+          </h3>
+          <label className="block text-xs text-slate-500 dark:text-slate-400">
+            Horas ahorradas por semana (estimado)
+            <input
+              key={`hours-${process.id}`}
+              type="number"
+              min={0}
+              step={0.5}
+              defaultValue={process.impactHoursPerWeek ?? ''}
+              onBlur={(e) => {
+                const value = e.target.value === '' ? undefined : Number(e.target.value)
+                updateProcess(process.id, { impactHoursPerWeek: value })
+              }}
+              placeholder="Ej. 5"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink outline-none focus:border-brand-blue dark:border-white/10 dark:bg-white/5 dark:text-white"
+            />
+          </label>
+          <label className="mt-3 block text-xs text-slate-500 dark:text-slate-400">
+            Nota de impacto
+            <textarea
+              key={`note-${process.id}`}
+              defaultValue={process.impactNote ?? ''}
+              onBlur={(e) => updateProcess(process.id, { impactNote: e.target.value })}
+              placeholder="Ej. Reduce el cierre mensual de 5 días a 3."
+              rows={2}
+              className="mt-1 w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink outline-none focus:border-brand-blue dark:border-white/10 dark:bg-white/5 dark:text-white"
+            />
+          </label>
         </div>
 
         {process.transcript && process.transcript.length > 0 && (

@@ -1,3 +1,4 @@
+import { detectArea } from './areas'
 import type { ProcessRecord, ProcessStep, TranscriptLine } from '../types'
 
 const STOPWORDS = new Set([
@@ -60,12 +61,16 @@ export function buildProcessFromTranscript(lines: TranscriptLine[]): ProcessReco
       .join(' ')
       .slice(0, 220) || 'Capturado mediante una sesión de voz en vivo. Pendiente de revisión y estructuración.'
 
+  const fullText = lines.map((l) => l.text).join(' ')
+  const area = detectArea(fullText)
+
   return {
     id: `proc-${Date.now()}`,
     title: titleFromTranscript(lines),
     summary,
     status: 'Draft',
-    category: 'Captura por Voz',
+    category: area ?? 'Captura por Voz',
+    area,
     tags: ['Voz', 'Auto-documentado'],
     createdAt: now,
     updatedAt: now,
@@ -76,6 +81,8 @@ export function buildProcessFromTranscript(lines: TranscriptLine[]): ProcessReco
     efficiencyScore: 50,
     sourceType: 'voice',
     transcript: lines,
-    aiSuggestions: ['Confirmar responsables y asignados para cada paso', 'Vincular este proceso a su nodo departamental'],
+    aiSuggestions: area
+      ? [`Confirmar el impacto estimado en horas/semana para el área de ${area}`, 'Confirmar responsables y asignados para cada paso']
+      : ['Asignar este proceso a un área (Ventas, Marketing, Operaciones o Finanzas)', 'Confirmar responsables y asignados para cada paso'],
   }
 }

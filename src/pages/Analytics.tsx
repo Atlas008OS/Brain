@@ -1,4 +1,5 @@
 import { TopBar } from '../components/TopBar'
+import { AREA_ICONS, AREAS } from '../lib/areas'
 import { useBrainOpsStore } from '../lib/store'
 import type { ProcessStatus } from '../types'
 
@@ -31,14 +32,45 @@ export function Analytics() {
     processes.reduce((acc, p) => acc + (p.efficiencyScore ?? 0), 0) / Math.max(1, processes.length),
   )
 
+  const roiByArea = useBrainOpsStore((s) => s.roiHoursByArea())
+  const totalRoiHours = useBrainOpsStore((s) => s.totalRoiHours())
+  const maxRoi = Math.max(1, ...AREAS.map((a) => roiByArea[a]))
+
   return (
     <div className="pb-28">
       <TopBar title="Analítica" />
       <div className="space-y-5 px-4 pt-4">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <MetricTile label="Cobertura" value={`${coverage}%`} />
+          <MetricTile label="Horas ahorradas / semana" value={`${totalRoiHours}h`} accent />
           <MetricTile label="Eficiencia prom." value={`${avgEfficiency}%`} />
           <MetricTile label="Capturados por voz" value={String(voiceCaptured)} />
+        </div>
+
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-4 text-sm font-semibold text-ink dark:text-white">ROI por área (horas ahorradas / semana)</h3>
+          <div className="space-y-3">
+            {AREAS.map((area) => {
+              const Icon = AREA_ICONS[area]
+              const hours = roiByArea[area]
+              return (
+                <div key={area}>
+                  <div className="mb-1 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <span className="flex items-center gap-1.5">
+                      <Icon size={13} /> {area}
+                    </span>
+                    <span className="font-semibold text-brand-teal">{hours}h</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
+                    <div
+                      className="h-full rounded-full bg-brand-teal transition-all"
+                      style={{ width: `${(hours / maxRoi) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
@@ -98,10 +130,10 @@ export function Analytics() {
   )
 }
 
-function MetricTile({ label, value }: { label: string; value: string }) {
+function MetricTile({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
     <div className="rounded-2xl border border-slate-100 bg-white p-3 text-center shadow-card dark:border-white/10 dark:bg-ink-soft">
-      <p className="text-lg font-bold text-ink dark:text-white">{value}</p>
+      <p className={`text-lg font-bold ${accent ? 'text-brand-teal' : 'text-ink dark:text-white'}`}>{value}</p>
       <p className="text-[11px] text-slate-400">{label}</p>
     </div>
   )
