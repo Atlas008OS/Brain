@@ -22,8 +22,8 @@ export function BottomNav() {
         <NavLink to="/agent" className="relative -translate-y-4">
           {({ isActive }) => (
             <div
-              className={`flex h-14 w-14 items-center justify-center rounded-full shadow-floating transition-colors ${
-                isActive ? 'bg-brand-teal' : 'bg-ink'
+              className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-transparent shadow-floating transition-colors ${
+                isActive ? 'bg-brand-teal' : 'bg-ink dark:border-white/25 dark:bg-white/10'
               }`}
             >
               <Mic size={22} className="text-white" />
