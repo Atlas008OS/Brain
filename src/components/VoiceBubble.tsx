@@ -18,7 +18,7 @@ export function VoiceBubble({ phase, size = 260 }: { phase: AgentPhase; size?: n
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <motion.div
         className="absolute rounded-full animate-blobDrift"
-        style={{ width: size * 1.35, height: size * 1.35, background: colors.ring2 }}
+        style={{ width: size * 1.18, height: size * 1.18, background: colors.ring2 }}
         animate={{ scale: active ? [1, 1.08, 1] : 1 }}
         transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
       />

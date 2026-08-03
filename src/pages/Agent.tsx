@@ -49,9 +49,9 @@ export function Agent() {
         </span>
       </header>
 
-      <div className="flex flex-col items-center pt-6">
-        <VoiceBubble phase={finishing ? 'ended' : phase} />
-        <div className="-mt-16 text-center">
+      <div className="flex flex-col items-center pb-4 pt-4">
+        <VoiceBubble phase={finishing ? 'ended' : phase} size={200} />
+        <div className="-mt-6 text-center">
           <h2 className="text-2xl font-bold text-ink">{finishing ? 'Documentando…' : phaseLabel(phase)}</h2>
           <p className="mt-1 text-sm text-slate-500">
             {phase === 'error' ? errorMessage ?? 'Ocurrió un problema.' : 'Inteligencia del sistema activa'}
@@ -60,7 +60,7 @@ export function Agent() {
       </div>
 
       {(phase === 'idle' || phase === 'error' || phase === 'ended') && !finishing && (
-        <div className="px-4 pt-6 text-center">
+        <div className="px-4 pb-2 pt-2 text-center">
           <button
             onClick={start}
             className="mx-auto flex items-center gap-2 rounded-2xl bg-ink px-6 py-3 font-semibold text-white shadow-floating"
