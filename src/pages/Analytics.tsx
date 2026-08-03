@@ -1,0 +1,108 @@
+import { TopBar } from '../components/TopBar'
+import { useBrainOpsStore } from '../lib/store'
+import type { ProcessStatus } from '../types'
+
+const STATUS_COLORS: Record<ProcessStatus, string> = {
+  Published: '#1FC0B8',
+  Draft: '#94A3B8',
+  'Needs Review': '#F26D6D',
+}
+
+const STATUS_LABELS: Record<ProcessStatus, string> = {
+  Published: 'Publicado',
+  Draft: 'Borrador',
+  'Needs Review': 'Necesita revisión',
+}
+
+export function Analytics() {
+  const processes = useBrainOpsStore((s) => s.processes)
+  const departments = useBrainOpsStore((s) => s.departments)
+  const activityLog = useBrainOpsStore((s) => s.activityLog)
+  const coverage = useBrainOpsStore((s) => s.documentationCoveragePercent())
+
+  const statusCounts = (['Published', 'Draft', 'Needs Review'] as ProcessStatus[]).map((status) => ({
+    status,
+    count: processes.filter((p) => p.status === status).length,
+  }))
+  const maxCount = Math.max(1, ...statusCounts.map((s) => s.count))
+
+  const voiceCaptured = processes.filter((p) => p.sourceType === 'voice').length
+  const avgEfficiency = Math.round(
+    processes.reduce((acc, p) => acc + (p.efficiencyScore ?? 0), 0) / Math.max(1, processes.length),
+  )
+
+  return (
+    <div className="pb-28">
+      <TopBar title="Analítica" />
+      <div className="space-y-5 px-4 pt-4">
+        <div className="grid grid-cols-3 gap-3">
+          <MetricTile label="Cobertura" value={`${coverage}%`} />
+          <MetricTile label="Eficiencia prom." value={`${avgEfficiency}%`} />
+          <MetricTile label="Capturados por voz" value={String(voiceCaptured)} />
+        </div>
+
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
+          <h3 className="mb-4 text-sm font-semibold text-ink">Procesos por estado</h3>
+          <div className="space-y-3">
+            {statusCounts.map(({ status, count }) => (
+              <div key={status}>
+                <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
+                  <span>{STATUS_LABELS[status]}</span>
+                  <span className="font-semibold text-ink">{count}</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${(count / maxCount) * 100}%`, background: STATUS_COLORS[status] }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
+          <h3 className="mb-4 text-sm font-semibold text-ink">Completitud por departamento</h3>
+          <div className="space-y-3">
+            {departments.map((dept) => (
+              <div key={dept.id}>
+                <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
+                  <span>{dept.name}</span>
+                  <span className="font-semibold text-ink">{dept.completeness}%</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-full rounded-full bg-brand-blue" style={{ width: `${dept.completeness}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
+          <h3 className="mb-3 text-sm font-semibold text-ink">Auditoría completa</h3>
+          <ul className="space-y-3">
+            {activityLog.map((entry) => (
+              <li key={entry.id} className="flex gap-2 text-sm">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-teal" />
+                <span className="text-slate-600">
+                  {entry.text}
+                  <span className="block text-xs text-slate-400">{new Date(entry.timestamp).toLocaleString()}</span>
+                </span>
+              </li>
+            ))}
+            {activityLog.length === 0 && <p className="text-sm text-slate-400">Aún no hay actividad registrada.</p>}
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MetricTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-slate-100 bg-white p-3 text-center shadow-card">
+      <p className="text-lg font-bold text-ink">{value}</p>
+      <p className="text-[11px] text-slate-400">{label}</p>
+    </div>
+  )
+}
