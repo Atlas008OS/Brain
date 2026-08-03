@@ -1,11 +1,14 @@
-import { Bell, Mic, Shield, Trash2, UserRound } from 'lucide-react'
+import { Bell, Mic, Moon, Shield, Sun, Trash2, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { TopBar } from '../components/TopBar'
+import { useThemeStore } from '../lib/theme'
 import { AGENT_ID } from '../lib/voiceAgent'
 
 export function Settings() {
   const [notifications, setNotifications] = useState(true)
   const [autoPublish, setAutoPublish] = useState(false)
+  const theme = useThemeStore((s) => s.theme)
+  const setTheme = useThemeStore((s) => s.setTheme)
 
   const clearData = () => {
     if (confirm('Esto borrará todos los procesos y la actividad guardados localmente. ¿Continuar?')) {
@@ -18,23 +21,47 @@ export function Settings() {
     <div className="pb-28">
       <TopBar title="Ajustes" />
       <div className="space-y-5 px-4 pt-4">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-white">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-white dark:bg-white/10">
             <UserRound size={20} />
           </div>
           <div>
-            <p className="font-semibold text-ink">alejo.lopez191104@gmail.com</p>
+            <p className="font-semibold text-ink dark:text-white">alejo.lopez191104@gmail.com</p>
             <p className="text-xs text-slate-400">Propietario del workspace de BrainOps</p>
           </div>
         </div>
 
-        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink dark:text-white">
+            {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />} Apariencia
+          </h3>
+          <div className="flex items-center gap-2 rounded-xl bg-mist-50 p-1 dark:bg-white/5">
+            <button
+              onClick={() => setTheme('light')}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-colors ${
+                theme === 'light' ? 'bg-white text-ink shadow-card' : 'text-slate-500 dark:text-slate-400'
+              }`}
+            >
+              <Sun size={15} /> Claro
+            </button>
+            <button
+              onClick={() => setTheme('dark')}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-colors ${
+                theme === 'dark' ? 'bg-ink text-white shadow-card' : 'text-slate-500 dark:text-slate-400'
+              }`}
+            >
+              <Moon size={15} /> Oscuro
+            </button>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink dark:text-white">
             <Mic size={16} /> Agente de voz
           </h3>
-          <div className="flex items-center justify-between rounded-xl bg-mist-50 px-3 py-2 text-sm">
-            <span className="text-slate-500">ID del agente</span>
-            <span className="font-mono text-xs text-ink">{AGENT_ID}</span>
+          <div className="flex items-center justify-between rounded-xl bg-mist-50 px-3 py-2 text-sm dark:bg-white/5">
+            <span className="text-slate-500 dark:text-slate-400">ID del agente</span>
+            <span className="font-mono text-xs text-ink dark:text-white">{AGENT_ID}</span>
           </div>
           <ToggleRow
             label="Publicar automáticamente SOPs con alta confianza"
@@ -44,8 +71,8 @@ export function Settings() {
           />
         </section>
 
-        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink dark:text-white">
             <Bell size={16} /> Notificaciones
           </h3>
           <ToggleRow
@@ -56,8 +83,8 @@ export function Settings() {
           />
         </section>
 
-        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+        <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink dark:text-white">
             <Shield size={16} /> Datos
           </h3>
           <p className="mb-3 text-xs text-slate-400">
@@ -66,7 +93,7 @@ export function Settings() {
           </p>
           <button
             onClick={clearData}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 py-2.5 text-sm font-medium text-rose-500"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 py-2.5 text-sm font-medium text-rose-500 dark:border-rose-500/30"
           >
             <Trash2 size={16} /> Borrar datos locales
           </button>
@@ -90,7 +117,7 @@ function ToggleRow({
   return (
     <label className="flex items-center justify-between gap-3 py-2">
       <span>
-        <span className="block text-sm font-medium text-ink">{label}</span>
+        <span className="block text-sm font-medium text-ink dark:text-white">{label}</span>
         <span className="block text-xs text-slate-400">{description}</span>
       </span>
       <input

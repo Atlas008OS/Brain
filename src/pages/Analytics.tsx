@@ -41,16 +41,16 @@ export function Analytics() {
           <MetricTile label="Capturados por voz" value={String(voiceCaptured)} />
         </div>
 
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <h3 className="mb-4 text-sm font-semibold text-ink">Procesos por estado</h3>
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-4 text-sm font-semibold text-ink dark:text-white">Procesos por estado</h3>
           <div className="space-y-3">
             {statusCounts.map(({ status, count }) => (
               <div key={status}>
-                <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
+                <div className="mb-1 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>{STATUS_LABELS[status]}</span>
-                  <span className="font-semibold text-ink">{count}</span>
+                  <span className="font-semibold text-ink dark:text-white">{count}</span>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                   <div
                     className="h-full rounded-full transition-all"
                     style={{ width: `${(count / maxCount) * 100}%`, background: STATUS_COLORS[status] }}
@@ -61,16 +61,16 @@ export function Analytics() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <h3 className="mb-4 text-sm font-semibold text-ink">Completitud por departamento</h3>
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-4 text-sm font-semibold text-ink dark:text-white">Completitud por departamento</h3>
           <div className="space-y-3">
             {departments.map((dept) => (
               <div key={dept.id}>
-                <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
+                <div className="mb-1 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>{dept.name}</span>
-                  <span className="font-semibold text-ink">{dept.completeness}%</span>
+                  <span className="font-semibold text-ink dark:text-white">{dept.completeness}%</span>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                   <div className="h-full rounded-full bg-brand-blue" style={{ width: `${dept.completeness}%` }} />
                 </div>
               </div>
@@ -78,13 +78,13 @@ export function Analytics() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
-          <h3 className="mb-3 text-sm font-semibold text-ink">Auditoría completa</h3>
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
+          <h3 className="mb-3 text-sm font-semibold text-ink dark:text-white">Auditoría completa</h3>
           <ul className="space-y-3">
             {activityLog.map((entry) => (
               <li key={entry.id} className="flex gap-2 text-sm">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-teal" />
-                <span className="text-slate-600">
+                <span className="text-slate-600 dark:text-slate-300">
                   {entry.text}
                   <span className="block text-xs text-slate-400">{new Date(entry.timestamp).toLocaleString()}</span>
                 </span>
@@ -100,8 +100,8 @@ export function Analytics() {
 
 function MetricTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-3 text-center shadow-card">
-      <p className="text-lg font-bold text-ink">{value}</p>
+    <div className="rounded-2xl border border-slate-100 bg-white p-3 text-center shadow-card dark:border-white/10 dark:bg-ink-soft">
+      <p className="text-lg font-bold text-ink dark:text-white">{value}</p>
       <p className="text-[11px] text-slate-400">{label}</p>
     </div>
   )

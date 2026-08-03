@@ -9,7 +9,7 @@ body,
 }
 
 body {
-  @apply bg-mist-50 text-ink antialiased;
+  @apply bg-mist-50 text-ink antialiased transition-colors duration-200 dark:bg-ink dark:text-slate-100;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 

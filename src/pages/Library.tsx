@@ -51,14 +51,14 @@ export function Library() {
       <div className="px-4 pt-4">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-ink">Biblioteca de procesos</h2>
+            <h2 className="text-2xl font-bold text-ink dark:text-white">Biblioteca de procesos</h2>
             <p className="text-sm text-slate-400">Gestiona y optimiza tus flujos de inteligencia operativa.</p>
           </div>
         </div>
 
         <button
           onClick={() => navigate('/agent')}
-          className="mb-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-ink py-3 font-semibold text-white shadow-card"
+          className="mb-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-ink py-3 font-semibold text-white shadow-card dark:bg-white dark:text-ink"
         >
           <Plus size={18} /> Nuevo proceso
         </button>
@@ -72,7 +72,7 @@ export function Library() {
               setPage(1)
             }}
             placeholder="Buscar procesos, etiquetas o autores"
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-brand-blue"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-brand-blue dark:border-white/10 dark:bg-ink-soft dark:text-white dark:placeholder:text-slate-500"
           />
         </div>
 
@@ -85,7 +85,9 @@ export function Library() {
                 setPage(1)
               }}
               className={`shrink-0 rounded-full px-3.5 py-1.5 font-medium transition-colors ${
-                tab === t ? 'bg-ink text-white' : 'bg-mist-100 text-slate-500'
+                tab === t
+                  ? 'bg-ink text-white dark:bg-white dark:text-ink'
+                  : 'bg-mist-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
               }`}
             >
               {TAB_LABELS[t]} ({counts[t as keyof typeof counts] ?? 0})
@@ -95,7 +97,7 @@ export function Library() {
 
         <div className="space-y-4">
           {pageItems.length === 0 && (
-            <p className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">
+            <p className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400 dark:border-white/10">
               Ningún proceso coincide con tu búsqueda.
             </p>
           )}
@@ -105,7 +107,7 @@ export function Library() {
         </div>
 
         {filtered.length > 0 && (
-          <div className="mt-6 flex items-center justify-between text-sm text-slate-500">
+          <div className="mt-6 flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
             <span>
               Mostrando {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, filtered.length)} de {filtered.length}{' '}
               procesos
@@ -114,17 +116,17 @@ export function Library() {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="h-7 w-7 rounded-full border border-slate-200 disabled:opacity-30"
+                className="h-7 w-7 rounded-full border border-slate-200 disabled:opacity-30 dark:border-white/10"
               >
                 ‹
               </button>
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-xs text-white">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-xs text-white dark:bg-white dark:text-ink">
                 {page}
               </span>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="h-7 w-7 rounded-full border border-slate-200 disabled:opacity-30"
+                className="h-7 w-7 rounded-full border border-slate-200 disabled:opacity-30 dark:border-white/10"
               >
                 ›
               </button>

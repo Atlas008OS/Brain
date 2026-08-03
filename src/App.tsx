@@ -13,7 +13,7 @@ function Shell() {
   const hideNav = location.pathname === '/agent'
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-mist-50 shadow-2xl">
+    <div className="mx-auto min-h-screen max-w-md bg-mist-50 shadow-2xl dark:bg-ink">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/agent" element={<Agent />} />

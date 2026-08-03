@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0B0F19" />
     <title>BrainOps — Inteligencia Operativa</title>
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('brainops-theme')
+          var theme = 'light'
+          if (raw) {
+            var parsed = JSON.parse(raw)
+            theme = (parsed && parsed.state && parsed.state.theme) || 'light'
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark'
+          }
+          if (theme === 'dark') document.documentElement.classList.add('dark')
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

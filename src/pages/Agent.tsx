@@ -46,19 +46,19 @@ export function Agent() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-mist-100 via-mist-50 to-white pb-32">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-mist-100 via-mist-50 to-white pb-32 dark:from-ink-soft dark:via-ink dark:to-ink">
       <header className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
           <button
             onClick={handleBack}
             aria-label="Volver al inicio"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-card hover:text-ink"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-card hover:text-ink dark:bg-ink-soft dark:text-slate-400 dark:hover:text-white"
           >
             <ChevronLeft size={20} />
           </button>
-          <h1 className="text-xl font-bold text-ink">BrainOps</h1>
+          <h1 className="text-xl font-bold text-ink dark:text-white">BrainOps</h1>
         </div>
-        <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-card">
+        <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-card dark:bg-ink-soft dark:text-slate-400">
           Inteligencia del sistema activa
         </span>
       </header>
@@ -66,8 +66,8 @@ export function Agent() {
       <div className="flex flex-col items-center pb-4 pt-4">
         <VoiceBubble phase={finishing ? 'ended' : phase} size={200} />
         <div className="mt-6 text-center">
-          <h2 className="text-2xl font-bold text-ink">{finishing ? 'Documentando…' : phaseLabel(phase)}</h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <h2 className="text-2xl font-bold text-ink dark:text-white">{finishing ? 'Documentando…' : phaseLabel(phase)}</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {phase === 'error' ? errorMessage ?? 'Ocurrió un problema.' : 'Inteligencia del sistema activa'}
           </p>
         </div>
@@ -85,9 +85,9 @@ export function Agent() {
       )}
 
       <section className="px-4 pt-6">
-        <div className="rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-card backdrop-blur">
+        <div className="rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-card backdrop-blur dark:border-white/10 dark:bg-ink-soft/90">
           <div className="mb-3 flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               📄 Transcripción en vivo
             </span>
             {isActiveSession && (
@@ -104,12 +104,12 @@ export function Agent() {
             )}
             {transcript.map((line) =>
               line.speaker === 'user' ? (
-                <p key={line.id} className="text-sm text-ink">
+                <p key={line.id} className="text-sm text-ink dark:text-white">
                   <span className="font-bold">Tú:</span> "{line.text}"
                 </p>
               ) : (
-                <p key={line.id} className="border-l-2 border-brand-blue pl-3 text-sm text-slate-700">
-                  <span className="font-bold text-brand-navy">Agente:</span> "{line.text}"
+                <p key={line.id} className="border-l-2 border-brand-blue pl-3 text-sm text-slate-700 dark:text-slate-300">
+                  <span className="font-bold text-brand-navy dark:text-brand-blue">Agente:</span> "{line.text}"
                 </p>
               ),
             )}
@@ -119,10 +119,10 @@ export function Agent() {
       </section>
 
       <section className="px-4 pt-4">
-        <div className="rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-card backdrop-blur">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Procesos activos</p>
-          <div className="flex items-center justify-between rounded-xl bg-mist-50 px-3 py-2.5">
-            <span className="flex items-center gap-2 text-sm font-medium text-ink">📊 Minería de datos</span>
+        <div className="rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-card backdrop-blur dark:border-white/10 dark:bg-ink-soft/90">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Procesos activos</p>
+          <div className="flex items-center justify-between rounded-xl bg-mist-50 px-3 py-2.5 dark:bg-white/5">
+            <span className="flex items-center gap-2 text-sm font-medium text-ink dark:text-white">📊 Minería de datos</span>
             <span className="text-sm font-semibold text-brand-teal">
               {isActiveSession ? `${Math.min(99, 40 + Math.floor(elapsed / 400))}%` : '—'}
             </span>
@@ -130,11 +130,11 @@ export function Agent() {
         </div>
       </section>
 
-      <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 border-t border-slate-100 bg-white/95 px-6 py-4 backdrop-blur">
+      <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 border-t border-slate-100 bg-white/95 px-6 py-4 backdrop-blur dark:border-white/10 dark:bg-ink-soft/95">
         <button
           onClick={toggleMute}
           disabled={!isActiveSession}
-          className="flex h-14 w-14 flex-col items-center justify-center gap-1 rounded-full bg-mist-100 text-slate-500 disabled:opacity-40"
+          className="flex h-14 w-14 flex-col items-center justify-center gap-1 rounded-full bg-mist-100 text-slate-500 disabled:opacity-40 dark:bg-white/5 dark:text-slate-400"
         >
           {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
         </button>
@@ -142,12 +142,12 @@ export function Agent() {
         <button
           onClick={handleStop}
           disabled={!isActiveSession || finishing}
-          className="flex flex-1 max-w-[220px] items-center justify-center gap-2 rounded-full bg-rose-100 py-4 font-semibold text-rose-600 shadow-card disabled:opacity-40"
+          className="flex flex-1 max-w-[220px] items-center justify-center gap-2 rounded-full bg-rose-100 py-4 font-semibold text-rose-600 shadow-card disabled:opacity-40 dark:bg-rose-500/10"
         >
           <Square size={16} fill="currentColor" /> {finishing ? 'Guardando…' : 'Detener agente'}
         </button>
 
-        <button className="flex h-14 w-14 flex-col items-center justify-center gap-1 rounded-full bg-mist-100 text-slate-500">
+        <button className="flex h-14 w-14 flex-col items-center justify-center gap-1 rounded-full bg-mist-100 text-slate-500 dark:bg-white/5 dark:text-slate-400">
           <Settings size={20} />
         </button>
       </div>

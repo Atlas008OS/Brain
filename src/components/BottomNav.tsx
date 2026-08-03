@@ -13,7 +13,7 @@ const TRAILING = [
 
 export function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur px-2 pb-[env(safe-area-inset-bottom)] pt-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur px-2 pb-[env(safe-area-inset-bottom)] pt-1 dark:border-white/10 dark:bg-ink/95">
       <div className="mx-auto flex max-w-md items-center justify-between px-2">
         {ITEMS.map((item) => (
           <NavItem key={item.to} {...item} />
@@ -44,8 +44,8 @@ function NavItem({ to, label, icon: Icon }: { to: string; label: string; icon: t
     <NavLink to={to} className="flex flex-col items-center gap-1 px-2 py-2 text-[11px]">
       {({ isActive }) => (
         <>
-          <Icon size={20} className={isActive ? 'text-ink' : 'text-slate-400'} />
-          <span className={isActive ? 'font-medium text-ink' : 'text-slate-400'}>{label}</span>
+          <Icon size={20} className={isActive ? 'text-ink dark:text-white' : 'text-slate-400'} />
+          <span className={isActive ? 'font-medium text-ink dark:text-white' : 'text-slate-400'}>{label}</span>
         </>
       )}
     </NavLink>

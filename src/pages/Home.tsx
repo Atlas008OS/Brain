@@ -90,8 +90,8 @@ export function Home() {
 
       <section className="px-4 pt-6">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-ink">Nodos departamentales</h3>
-          <button onClick={() => navigate('/library')} className="flex items-center text-xs font-medium text-slate-500">
+          <h3 className="text-lg font-bold text-ink dark:text-white">Nodos departamentales</h3>
+          <button onClick={() => navigate('/library')} className="flex items-center text-xs font-medium text-slate-500 dark:text-slate-400">
             Ver catálogo <ChevronRight size={14} />
           </button>
         </div>
@@ -100,19 +100,19 @@ export function Home() {
           {departments.map((dept) => {
             const Icon = DEPT_ICONS[dept.icon]
             return (
-              <div key={dept.id} className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
+              <div key={dept.id} className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
                 <div className="flex items-start gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue">
                     <Icon size={18} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-ink">{dept.name}</p>
+                    <p className="font-semibold text-ink dark:text-white">{dept.name}</p>
                     <p className="text-xs text-slate-400">{dept.description}</p>
-                    <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+                    <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                       <span>Completitud</span>
-                      <span className="font-semibold text-ink">{dept.completeness}%</span>
+                      <span className="font-semibold text-ink dark:text-white">{dept.completeness}%</span>
                     </div>
-                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
                       <div className="h-full rounded-full bg-brand-blue" style={{ width: `${dept.completeness}%` }} />
                     </div>
                   </div>
@@ -124,19 +124,19 @@ export function Home() {
       </section>
 
       <section className="px-4 pt-6">
-        <h3 className="mb-3 text-lg font-bold text-ink">Registro de actividad</h3>
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card">
+        <h3 className="mb-3 text-lg font-bold text-ink dark:text-white">Registro de actividad</h3>
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-card dark:border-white/10 dark:bg-ink-soft">
           <ul className="space-y-3">
             {activityLog.slice(0, 4).map((entry) => (
               <li key={entry.id} className="flex gap-2 text-sm">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-teal" />
-                <span className="text-slate-600">
+                <span className="text-slate-600 dark:text-slate-300">
                   {entry.text} <span className="text-xs text-slate-400">· {timeAgo(entry.timestamp)}</span>
                 </span>
               </li>
             ))}
           </ul>
-          <button onClick={() => navigate('/analytics')} className="mt-3 text-xs font-medium text-slate-500 hover:underline">
+          <button onClick={() => navigate('/analytics')} className="mt-3 text-xs font-medium text-slate-500 hover:underline dark:text-slate-400">
             Ver auditoría completa
           </button>
         </div>
